@@ -1,0 +1,23 @@
+<div class="fixed left-0 w-1/5 m-10 outline-1 rounded-sm">
+  <div class="text-center text-2xl p-2">Players</div>
+  <div class="outline-1 mx-10"></div>
+  @if ((_mainStore.room()?.players?.length || 0) > 0) {
+  <div class="flex flex-col gap-1 mx-5 p-5">
+    @for (player of _mainStore.room()?.players || []; track player.name) {
+    <div class="flex flex-row justify-between">
+      <div class="text-white">
+        {{ player.name }}
+      </div>
+      <div>
+        @if (player.vote) {
+        <fa-icon [icon]="faCircleCheck" style="color: lightgreen;"></fa-icon>
+        } @else {
+        <fa-icon [icon]="faClock" style="color: gray;"></fa-icon>
+        }
+      </div>
+
+    </div>
+    }
+  </div>
+  }
+</div>

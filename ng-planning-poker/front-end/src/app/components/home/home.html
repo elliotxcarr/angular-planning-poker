@@ -1,0 +1,62 @@
+@let room = this._mainStore.room;
+
+<div class="flex flex-row justify-center h-screen">
+
+  <!-- Player Window -->
+  <app-player-window/>
+
+  <!-- Leave button -->
+  <div class="fixed right-0 m-10 flex flex-col items-start gap-4">
+    <button (click)="_socketService.leave()" class="text-xl hover:cursor-pointer hover:text-white rounded-sm p-1">
+      Leave Game
+      <fa-icon [icon]="faArrowRightFromBracket" class="pl-3"></fa-icon>
+    </button>
+  </div>
+
+  <!-- Main content -->
+  <div class="flex flex-col gap-5 justify-center text-center w-2/3">
+    <h1 class="pt-5">Planning Poker Room: {{ room()?.id }}</h1>
+    <div class="flex flex-row justify-center gap-2">
+      <button (click)="_socketService.refresh()" class="game-button">
+        Refresh
+      </button>
+      <button (click)="_socketService.reveal()" class="game-button" [disabled]="!this._mainStore.allVoted()">
+        Reveal
+      </button>
+    </div>
+
+    @if (room()?.votes) {
+    <div class="picked-card-container">
+      @for (card of room()?.votes; track $index) {
+      <div class="card w-30 h-40" [ngClass]="room()?.revealed ? '': 'bg-gray-700' ">
+        @if (room()?.revealed) {
+        <h1>{{card}}</h1>
+        } @else {
+        <fa-icon [icon]="faQuestion" />
+        }
+      </div>
+      }
+    </div>
+    }
+
+    <div class="flex justify-center items-end h-full pb-5">
+      <div class="flex flex-row justify-around w-3/5 gap-2">
+        @for (num of _mainStore.numbers(); track $index) {
+        <div (click)="_socketService.vote(num)" class="w-20 h-30 card" [ngClass]="{
+            'hover:bg-gray-800 hover:cursor-pointer': !hasVoted(),
+            'hover:bg-none outline-gray-500': hasVoted(),
+            'bg-gray-700 border-3': isSelected(num)
+          }">
+          <div class="text-5xl font-bold" [ngClass]="{
+              'text-gray-400': hasVoted() && !isSelected(num),
+              'text-white': !(hasVoted() && !isSelected(num))
+            }">
+            {{ num }}
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+  </div>
+</div>

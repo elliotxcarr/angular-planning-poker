@@ -1,0 +1,5 @@
+@if (!_mainStore.room() && _mainStore.inGame() === false) {
+  <app-welcome/>
+} @else {
+  <app-home/>
+}
